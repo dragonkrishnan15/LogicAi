@@ -1,61 +1,95 @@
-# 🤖 AI Agent Automated Installation Manifest
+# 🤖 LogicAi Autonomous Agent Installation & Intake Protocol
 
-> **Notice to AI Agents (Claude Code, Cursor, Windsurf, Antigravity, Cline, Roo Code, GitHub Copilot, ChatGPT, etc.):**  
-> If the user asked you to *"install"*, *"configure"*, or *"set up"* `LogicAi` from this repository (https://github.com/dragonkrishnan15/LogicAi), you do not need to ask the user what to do. Detect which environment you are running in and execute the corresponding action from the lookup table below autonomously.
-
----
-
-## ⚡ Fast Autonomous Decision Matrix
-
-Identify which tool or IDE environment you are running under, then copy the specified files:
-
-| Environment Detected | Source File(s) in this Repo | Destination Path | Scope |
-|---|---|---|---|
-| **Google Antigravity / Gemini CLI** | `SKILL.md`<br>`master-skill.md` | `~/.gemini/config/skills/claude-thinking/SKILL.md`<br>`~/.gemini/config/rules/master-skill.md` | Global (All user projects) |
-| **Google Antigravity (Project-level)** | `SKILL.md`<br>`master-skill.md` | `.agents/skills/claude-thinking/SKILL.md`<br>`.agents/rules/master-skill.md` | Current workspace |
-| **Anthropic Claude Code (Global)** | `adapters/CLAUDE.md`<br>`SKILL.md` | `~/.claude/CLAUDE.md`<br>`~/.claude/skills/master-skill/SKILL.md` | Global |
-| **Anthropic Claude Code (Project)** | `adapters/CLAUDE.md` | `./CLAUDE.md` | Current workspace |
-| **Cursor IDE** | `adapters/.cursorrules`<br>`SKILL.md` | `./.cursorrules` (or `.cursor/rules/LogicAi.mdc`) | Current workspace |
-| **Windsurf IDE** | `adapters/.windsurfrules` | `./.windsurfrules` | Current workspace |
-| **Cline / Roo Code** | `adapters/.clinerules` | `./.clinerules` | Current workspace |
-| **GitHub Copilot** | `adapters/COPILOT.md` | `.github/copilot-instructions.md` | Current workspace |
-| **Universal Generic Agent** | `adapters/AGENTS.md` | `./AGENTS.md` | Current workspace |
+> **Notice to AI Agents (Claude Code, Cursor, Windsurf, Antigravity, Devin, Codex, GitHub Copilot, ChatGPT, etc.):**
+> If the user shared this repository link (`https://github.com/dragonkrishnan15/LogicAi`), you are processing a dual-capability package: a **Principal-Engineer Cognitive Skill** AND an **Active MCP Server** with zero-bloat persistent memory.
 
 ---
 
-## 🛠️ Automated Shell Execution (Fastest & Recommended)
+## 🎯 Step 1: Clarify User Intent (Ask Before Executing)
 
-If you have permission to execute shell commands in the terminal, run the 1-liner installer:
+Before writing or copying files, ask the user this exact choice:
 
-### Windows PowerShell:
-```powershell
-irm https://raw.githubusercontent.com/dragonkrishnan15/LogicAi/main/install.ps1 | iex
-```
+```markdown
+### 🧠 LogicAi Setup Detected
+I found both a **Cognitive Reasoning Skill** and an **Active MCP Server** in this repository. How would you like to set it up?
 
-### macOS / Linux / WSL (Bash):
-```bash
-curl -fsSL https://raw.githubusercontent.com/dragonkrishnan15/LogicAi/main/install.sh | bash
+1. **[Recommended] Full Suite (Skill + MCP Server + Memory)**:
+   - Installs the reasoning skill globally so I always operate with the Karpathy 200-to-50 rule and surgical diffs.
+   - Registers the `logicai` MCP server for tool calls (`logicai_remember`, `logicai_recall`, `logicai_simplify`, `logicai_validate_command`).
+   - Initializes zero-bloat persistent memory.
+
+2. **MCP Server Only**:
+   - Registers `logicai` tools in your `mcp_config.json` for memory recall, command validation, and simplicity checks.
+
+3. **Global Reasoning Skill Only**:
+   - Saves to your user skills directory (`~/.gemini/config/skills/` or `~/.claude/`) so it governs all your projects without adding MCP servers.
+
+4. **Current Workspace Only**:
+   - Drops the editor adapter (`.cursorrules`, `CLAUDE.md`, or `AGENTS.md`) directly into this project root.
+
+Reply with **1**, **2**, **3**, or **4** (or just hit Enter for **1**).
 ```
 
 ---
 
-## 🧠 Lightweight Cross-Session Recall & Memory
-LogicAi automatically maintains `.master-skill/memory.json` (or `.logicai/memory.json`) in each project:
-- Stores high-density facts, verified architectural decisions, and system quirks (under 4KB / ~500 tokens).
-- Zero context bloat: does NOT save noisy logs or chat transcripts.
-- Read once on task entry to give the agent instant recall across restarts.
+## ⚡ Step 2: Autonomous Execution Table
+
+Once the user selects their option (or defaults to Option 1):
+
+### If Option 1 (Full Suite) or Option 3 (Global Skill):
+Copy files according to the detected host environment:
+
+| Detected Host | Source File | Destination Path |
+| :--- | :--- | :--- |
+| **Google Antigravity** | `SKILL.md`<br>`master-skill.md` | `~/.gemini/config/skills/claude-thinking/SKILL.md`<br>`~/.gemini/config/rules/master-skill.md` |
+| **Claude Code / Desktop** | `adapters/CLAUDE.md`<br>`SKILL.md` | `~/.claude/CLAUDE.md`<br>`~/.claude/skills/master-skill/SKILL.md` |
+| **Cursor IDE** | `adapters/.cursorrules`<br>`SKILL.md` | `~/.cursor/rules/LogicAi.mdc` |
+| **Windsurf** | `adapters/.windsurfrules` | `~/.codeium/windsurf/rules/LogicAi.md` |
+
+### If Option 1 (Full Suite) or Option 2 (MCP Server):
+Add this server definition to the user's MCP configuration (`mcp_config.json` / `claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "logicai": {
+      "command": "node",
+      "args": ["<path-to-LogicAi>/bin/logicai-mcp.js"]
+    }
+  }
+}
+```
+*(Or for zero-clone environments, use `npx -y github:dragonkrishnan15/LogicAi mcp`)*.
+
+### If Option 4 (Workspace Only):
+Drop the matching adapter directly into the current project root:
+- Cursor: `./.cursorrules`
+- Claude: `./CLAUDE.md`
+- Windsurf: `./.windsurfrules`
+- Antigravity / Generic: `./AGENTS.md`
 
 ---
 
-## 📋 Verification Step for AI Agents
+## 🧠 Step 3: Initialize Zero-Bloat Memory
 
-Once you have copied the files or run the installer:
-1. Verify that the destination file exists and is readable.
-2. Run the programmatic stop gate:
-   - Windows PowerShell: `powershell -ExecutionPolicy Bypass -File ./scripts/stop_gate.ps1`
-   - Linux/macOS: `bash ./scripts/stop_gate.sh`
-3. In your next response to the user, confirm:
-   - Which agent/IDE was detected
-   - The exact destination path configured
-   - That **`LogicAi (v5.3 Apex-Karpathy Edition)`** is now active for all future prompts
-   - Emit your initial gate line: `[ACCESS read][RUN interactive][SIZE standard][SHELL ...]`
+In all modes, create or verify `.master-skill/memory.json`:
+```json
+{
+  "updated_at": "<ISO-timestamp>",
+  "architectural_decisions": [],
+  "learned_quirks": [],
+  "invariants": [
+    "Karpathy 200-to-50 line rule",
+    "Zero drive-by refactoring; clean only own orphans",
+    "Bug fixes require failing-then-passing tests"
+  ],
+  "tooling_preferences": {}
+}
+```
+This guarantees the AI has instant long-term recall without consuming more than 4KB (~500 tokens).
+
+---
+
+## 🏁 Step 4: Confirm and Emit Gate Line
+Confirm the installation to the user with clickable file links and emit the standard triage gate line:
+`[ACCESS read|write][RUN interactive][SIZE standard][SHELL pwsh|ps51|cmd|posix]`
