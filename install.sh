@@ -3,7 +3,7 @@
 # master-skill Universal Installer for macOS / Linux / WSL
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/dragonkrishnan15/safety/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/dragonkrishnan15/LogicAi/main/install.sh | bash
 #   or locally:
 #   ./install.sh [--global | --project] [--target all|claude|cursor|windsurf|gemini|cline|copilot]
 # ==============================================================================
@@ -38,14 +38,14 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 
 # If executed via curl | bash, SCRIPT_DIR might not have SKILL.md
 if [[ ! -f "$SCRIPT_DIR/SKILL.md" ]]; then
-  TMP_REPO="$(mktemp -d)/master-skill"
-  echo "==> Fetching master-skill repository..."
-  git clone --depth 1 https://github.com/dragonkrishnan15/safety.git "$TMP_REPO"
+  TMP_REPO="$(mktemp -d)/LogicAi"
+  echo "==> Fetching LogicAi repository..."
+  git clone --depth 1 https://github.com/dragonkrishnan15/LogicAi.git "$TMP_REPO"
   SCRIPT_DIR="$TMP_REPO"
 fi
 
 echo "=========================================================="
-echo " 🧠 master-skill Universal Installer (v5.2)"
+echo " 🧠 LogicAi Universal Installer (v5.3 Apex-Karpathy)"
 echo " Scope:  $SCOPE"
 echo " Target: $TARGET"
 echo "=========================================================="

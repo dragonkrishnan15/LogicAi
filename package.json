@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dragonkrishnan15/safety.git"
+    "url": "git+https://github.com/dragonkrishnan15/LogicAi.git"
   },
   "keywords": [
     "ai-agent",
@@ -30,12 +30,14 @@
     "antigravity",
     "agentic-ai",
     "code-verification",
-    "principal-engineer"
+    "principal-engineer",
+    "karpathy-guidelines",
+    "logicai"
   ],
   "author": "dragonkrishnan15 <krishnanmayank915@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dragonkrishnan15/safety/issues"
+    "url": "https://github.com/dragonkrishnan15/LogicAi/issues"
   },
-  "homepage": "https://github.com/dragonkrishnan15/safety#readme"
+  "homepage": "https://github.com/dragonkrishnan15/LogicAi#readme"
 }

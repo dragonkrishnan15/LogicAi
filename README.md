@@ -56,25 +56,20 @@
 <i>Paste directly into <b>Cursor Composer</b>, <b>Claude Code</b>, or <b>Windsurf Chat</b>:</i>
 
 ```markdown
-Please install and activate @dragonkrishnan15/safety (master-skill v5.2) in this workspace autonomously from https://raw.githubusercontent.com/dragonkrishnan15/safety/main/AGENT_INSTALL.md. Detect my editor, drop the matching adapter, initialize ct-contract.json, and run the stop gate.
+Please install and activate LogicAi (v5.3 Apex-Karpathy) in this workspace autonomously from https://raw.githubusercontent.com/dragonkrishnan15/LogicAi/main/AGENT_INSTALL.md. Detect my editor, drop the matching adapter, initialize memory, and emit the gate line.
 ```
 
 </td>
 <td>
-<i>Run in any local project terminal (detects editor & drops adapters):</i>
+<i>Windows PowerShell (1-Line Instant Setup):</i>
 
-```bash
-npx @dragonkrishnan15/safety init
-```
-
-<i>Windows PowerShell (Automated):</i>
 ```powershell
-irm https://raw.githubusercontent.com/dragonkrishnan15/safety/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/dragonkrishnan15/LogicAi/main/install.ps1 | iex
 ```
 
 <i>macOS / Linux / WSL (Bash):</i>
 ```bash
-curl -fsSL https://raw.githubusercontent.com/dragonkrishnan15/safety/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/dragonkrishnan15/LogicAi/main/install.sh | bash
 ```
 
 </td>

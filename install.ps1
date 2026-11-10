@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     master-skill Universal Installer for Windows & PowerShell
 .DESCRIPTION
@@ -9,7 +9,7 @@
 .PARAMETER Target
     'auto' (auto-detect installed agents), 'all', or specific agent name. Default: 'auto'.
 .EXAMPLE
-    irm https://raw.githubusercontent.com/dragonkrishnan15/safety/main/install.ps1 | iex
+    irm https://raw.githubusercontent.com/dragonkrishnan15/LogicAi/main/install.ps1 | iex
 #>
 [CmdletBinding()]
 param(
@@ -25,15 +25,15 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 # Handle one-liner execution where script is piped (irm | iex)
 if (-not $ScriptDir -or -not (Test-Path "$ScriptDir/SKILL.md")) {
-    $TempRepo = Join-Path ([System.IO.Path]::GetTempPath()) "master-skill-install"
-    Write-Host "[*] Fetching master-skill repository..." -ForegroundColor Cyan
+    $TempRepo = Join-Path ([System.IO.Path]::GetTempPath()) "LogicAi-install"
+    Write-Host "[*] Fetching LogicAi repository..." -ForegroundColor Cyan
     if (Test-Path $TempRepo) { Remove-Item -Recurse -Force $TempRepo }
-    git clone --depth 1 https://github.com/dragonkrishnan15/safety.git $TempRepo
+    git clone --depth 1 https://github.com/dragonkrishnan15/LogicAi.git $TempRepo
     $ScriptDir = $TempRepo
 }
 
 Write-Host "==========================================================" -ForegroundColor Cyan
-Write-Host " 🧠 master-skill Universal Installer (v5.2)" -ForegroundColor Green
+Write-Host " 🧠 LogicAi Universal Installer (v5.3 Apex-Karpathy)" -ForegroundColor Green
 Write-Host " Scope:  $Scope" -ForegroundColor Yellow
 Write-Host " Target: $Target" -ForegroundColor Yellow
 Write-Host "==========================================================" -ForegroundColor Cyan
