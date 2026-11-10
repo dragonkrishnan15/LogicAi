@@ -1,9 +1,11 @@
 {
-  "name": "@dragonkrishnan15/safety",
+  "name": "@dragonkrishnan15/logicai",
   "version": "5.3.0",
-  "description": "Zero-trust autonomous AI agent safety, cognitive reasoning, active MCP interception, and pre-commit verification engine",
+  "description": "Zero-trust autonomous AI agent cognitive reasoning, Karpathy simplicity audit, active MCP interception, and pre-commit verification engine",
   "main": "master-skill.md",
   "bin": {
+    "logicai": "./bin/safety.js",
+    "logicai-mcp": "./bin/logicai-mcp.js",
     "safety": "./bin/safety.js",
     "safety-mcp": "./bin/safety-mcp.js"
   },

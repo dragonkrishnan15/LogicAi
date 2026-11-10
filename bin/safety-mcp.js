@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * safety-mcp - Zero-Trust Model Context Protocol (MCP) Server
- * Exposes deterministically enforced safety guardrails to AI agents.
+ * logicai-mcp - Zero-Trust Cognitive & Safety Model Context Protocol (MCP) Server
+ * Exposes Karpathy simplicity audits, persistent project memory, and deterministic guardrails.
  */
 
 const fs = require('fs');
@@ -15,7 +15,43 @@ const SCRIPT_DIR = path.join(__dirname, '..', 'scripts');
 // Available Tools Manifest
 const TOOLS = [
   {
-    name: 'safety_validate_command',
+    name: 'logicai_remember',
+    description: 'Saves a compact architectural decision, system quirk, or project invariant to persistent memory (<4KB, zero token bloat).',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        category: {
+          type: 'string',
+          enum: ['learned_quirks', 'architectural_decisions', 'invariants', 'tooling_preferences'],
+          description: 'Memory category to record under.'
+        },
+        entry: { type: 'string', description: 'Concise 1-2 line fact, quirk, or decision to remember.' }
+      },
+      required: ['entry']
+    }
+  },
+  {
+    name: 'logicai_recall',
+    description: 'Retrieves all persistent project memory, system quirks, and verified architectural decisions for the current repository.',
+    inputSchema: {
+      type: 'object',
+      properties: {}
+    }
+  },
+  {
+    name: 'logicai_simplify',
+    description: 'Audits code or proposed plans against Karpathy Simplicity (the Senior Engineer Sniff Test & 200-to-50 line rule). Catches speculative abstractions and bloated patterns.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        code: { type: 'string', description: 'Code snippet or proposed diff to audit.' },
+        context: { type: 'string', description: 'Summary of the user request being solved.' }
+      },
+      required: ['code']
+    }
+  },
+  {
+    name: 'logicai_validate_command',
     description: 'Intercepts and validates a proposed terminal command against the Zero-Destruction Wall and Secret Scanner before execution.',
     inputSchema: {
       type: 'object',
@@ -26,7 +62,7 @@ const TOOLS = [
     }
   },
   {
-    name: 'safety_init_contract',
+    name: 'logicai_init_contract',
     description: 'Initializes a formal Task Contract (ct-contract.json) establishing invariant boundaries before writing code.',
     inputSchema: {
       type: 'object',
@@ -40,7 +76,7 @@ const TOOLS = [
     }
   },
   {
-    name: 'safety_verify_gate',
+    name: 'logicai_verify_gate',
     description: 'Executes the Programmatic Stop Gate, verifying 0 DEBUG-CT leftovers, 0 secrets, contract boundaries, and test suite passage.',
     inputSchema: {
       type: 'object',
@@ -51,12 +87,12 @@ const TOOLS = [
     }
   },
   {
-    name: 'safety_mesh_lock',
+    name: 'logicai_mesh_lock',
     description: 'Acquires a decentralized lock on specified paths to prevent collisions with other concurrent agents.',
     inputSchema: {
       type: 'object',
       properties: {
-        agent_id: { type: 'string', description: 'Identifier of the requesting agent (e.g. cursor, claude-code).' },
+        agent_id: { type: 'string', description: 'Identifier of the requesting agent (e.g. cursor, claude-code, antigravity).' },
         paths: { type: 'array', items: { type: 'string' }, description: 'Files or globs to lock.' },
         task: { type: 'string', description: 'Short summary of the work being done.' },
         ttl_seconds: { type: 'number', description: 'Lock duration in seconds (default 1800).' }
@@ -65,7 +101,7 @@ const TOOLS = [
     }
   },
   {
-    name: 'safety_mesh_unlock',
+    name: 'logicai_mesh_unlock',
     description: 'Releases previously acquired mesh locks for this agent.',
     inputSchema: {
       type: 'object',
@@ -77,7 +113,7 @@ const TOOLS = [
     }
   },
   {
-    name: 'safety_mesh_status',
+    name: 'logicai_mesh_status',
     description: 'Lists all currently active multi-agent mesh locks across the repository.',
     inputSchema: {
       type: 'object',
@@ -85,7 +121,7 @@ const TOOLS = [
     }
   },
   {
-    name: 'safety_scorecard',
+    name: 'logicai_scorecard',
     description: 'Returns git diff statistics, line additions/deletions, untracked count, and verification metrics.',
     inputSchema: {
       type: 'object',
@@ -95,6 +131,103 @@ const TOOLS = [
 ];
 
 // Tool Executors
+function getMemoryFilePath() {
+  const primaryDir = path.join(process.cwd(), '.master-skill');
+  const primaryFile = path.join(primaryDir, 'memory.json');
+  return { dir: primaryDir, file: primaryFile };
+}
+
+function handleRemember(args) {
+  const category = args.category || 'learned_quirks';
+  const entry = (args.entry || '').trim();
+  if (!entry) {
+    return { isError: true, text: 'Entry cannot be empty.' };
+  }
+
+  const { dir, file } = getMemoryFilePath();
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+
+  let data = {
+    updated_at: '',
+    architectural_decisions: [],
+    learned_quirks: [],
+    invariants: [],
+    tooling_preferences: {}
+  };
+
+  if (fs.existsSync(file)) {
+    try {
+      data = JSON.parse(fs.readFileSync(file, 'utf8'));
+    } catch (_) {}
+  }
+
+  data.updated_at = new Date().toISOString();
+  if (!Array.isArray(data[category])) {
+    data[category] = [];
+  }
+  if (!data[category].includes(entry)) {
+    data[category].push(entry);
+  }
+
+  fs.writeFileSync(file, JSON.stringify(data, null, 2), 'utf8');
+  return {
+    isError: false,
+    text: JSON.stringify({ status: 'REMEMBERED', category, entry, memory_path: file }, null, 2)
+  };
+}
+
+function handleRecall() {
+  const { file } = getMemoryFilePath();
+  if (!fs.existsSync(file)) {
+    return {
+      isError: false,
+      text: JSON.stringify({ status: 'EMPTY_MEMORY', message: 'No prior project memory recorded yet.', file }, null, 2)
+    };
+  }
+  try {
+    const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+    return { isError: false, text: JSON.stringify(data, null, 2) };
+  } catch (err) {
+    return { isError: true, text: `Failed to parse memory: ${err.message}` };
+  }
+}
+
+function handleSimplify(args) {
+  const code = args.code || '';
+  const lines = code.split('\n');
+  const lineCount = lines.length;
+
+  const warnings = [];
+  if (lineCount > 150) {
+    warnings.push(`High line count (${lineCount} lines). Verify if the Karpathy 200-to-50 line rule applies.`);
+  }
+
+  if (/class\s+\w+Strategy|class\s+\w+Factory|class\s+\w+Builder/i.test(code)) {
+    warnings.push('Detected speculative design pattern (Strategy/Factory/Builder). If single-use, refactor into plain function.');
+  }
+  if (/(redis|cache\.set|lru_cache|memoize)/i.test(code)) {
+    warnings.push('Detected caching layer. Ensure caching was explicitly requested by user or backed by reproducible latency proof.');
+  }
+  if (/catch\s*\([^\)]*\)\s*\{\s*\}|except.*:\s*pass/i.test(code)) {
+    warnings.push('Detected swallowed exception. Errors must be handled or bubbled with context.');
+  }
+
+  const passed = warnings.length === 0;
+  return {
+    isError: false,
+    text: JSON.stringify({
+      sniff_test_passed: passed,
+      line_count: lineCount,
+      warnings,
+      recommendation: passed
+        ? 'Code satisfies Karpathy Simplicity and minimal footprint invariants.'
+        : 'Simplify abstractions and eliminate speculative features before submitting diff.'
+    }, null, 2)
+  };
+}
+
 function handleValidateCommand(args) {
   const cmd = (args.command || '').trim();
   const forbiddenPatterns = [
@@ -135,7 +268,8 @@ function handleInitContract(args) {
       'Additive changes only; no breaking public contracts',
       'Zero swallowed catch blocks or unhandled errors',
       'All pre-existing green tests remain green',
-      'Zero secrets committed'
+      'Zero secrets committed',
+      'Radical simplicity (Karpathy 200-to-50 line rule)'
     ],
     permitted_paths: args.permitted_paths || ['src/**', 'tests/**'],
     forbidden_paths: args.forbidden_paths || ['.env*', 'config/secrets/**', 'package-lock.json'],
@@ -249,41 +383,52 @@ rl.on('line', (line) => {
     sendResponse(id, {
       protocolVersion: '2024-11-05',
       capabilities: { tools: {} },
-      serverInfo: { name: 'safety-mcp', version: '5.2.0' }
+      serverInfo: { name: 'logicai-mcp', version: '5.3.0' }
     });
   } else if (method === 'notifications/initialized') {
-    // Ack, no response needed
+    // Ack
   } else if (method === 'tools/list') {
     sendResponse(id, { tools: TOOLS });
   } else if (method === 'tools/call') {
-    const toolName = params && params.name;
+    const rawToolName = (params && params.name) || '';
+    // Normalize logicai_ and safety_ prefixes
+    const toolName = rawToolName.replace(/^(safety_|logicai_)/, 'logicai_');
     const toolArgs = (params && params.arguments) || {};
     let result;
 
     switch (toolName) {
-      case 'safety_validate_command':
+      case 'logicai_remember':
+        result = handleRemember(toolArgs);
+        break;
+      case 'logicai_recall':
+        result = handleRecall();
+        break;
+      case 'logicai_simplify':
+        result = handleSimplify(toolArgs);
+        break;
+      case 'logicai_validate_command':
         result = handleValidateCommand(toolArgs);
         break;
-      case 'safety_init_contract':
+      case 'logicai_init_contract':
         result = handleInitContract(toolArgs);
         break;
-      case 'safety_verify_gate':
+      case 'logicai_verify_gate':
         result = handleVerifyGate(toolArgs);
         break;
-      case 'safety_mesh_lock':
+      case 'logicai_mesh_lock':
         result = handleMesh('acquire', toolArgs);
         break;
-      case 'safety_mesh_unlock':
+      case 'logicai_mesh_unlock':
         result = handleMesh('release', toolArgs);
         break;
-      case 'safety_mesh_status':
+      case 'logicai_mesh_status':
         result = handleMesh('status', toolArgs);
         break;
-      case 'safety_scorecard':
+      case 'logicai_scorecard':
         result = handleScorecard();
         break;
       default:
-        result = { isError: true, text: `Unknown tool: ${toolName}` };
+        result = { isError: true, text: `Unknown tool: ${rawToolName}` };
         break;
     }
 
