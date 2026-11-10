@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [5.3.0] - 2026-11-10
+
+### Added
+- **Apex-Karpathy Cognitive Simplicity Engine**:
+  - `references/simplicity-audit.md`: Anti-overengineering protocol codifying the Senior Engineer Sniff Test, the 200-to-50 Line Rule, and zero speculative abstractions.
+  - Upgraded `references/question-protocol.md`: Surface hidden ambiguities across scope, delivery format, volume/scale, and latency vs throughput dimensions before touching code; push back constructively on over-complicated architectures.
+  - Slash command `/ms-simplify`: Audit diffs and proposed plans for speculative bloat, unnecessary class hierarchies, and unprompted configurations.
+  - **Surgical Diff Discipline**: Enforced line-attribution invariant (every changed line must trace directly to user prompt; zero drive-by formatting; clean only own orphans, leaving pre-existing dead code untouched).
+  - Multi-IDE adapter updates (`CLAUDE.md`, `.cursorrules`, `AGENTS.md`, `.windsurfrules`, `.clinerules`, `SYSTEM_PROMPT.md`) harmonizing safety enforcement with Karpathy's simplicity principles.
+
+---
+
 ## [5.2.0] - 2026-10-16
 
 ### Added

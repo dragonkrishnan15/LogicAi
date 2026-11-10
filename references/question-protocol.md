@@ -1,15 +1,41 @@
-# Precision Question & Recommendation Protocol
+# Precision Question & Ambiguity Protocol (Karpathy Edition)
 
 Guidelines for soliciting user decisions without wasting time, generating cognitive fatigue, or halting progress unnecessarily.
 
-## 1. The Core Law of Questioning
-**Never ask lazy, open-ended questions.**
-Bad: *"What would you like me to do next?"* or *"Should we use Redux or Zustand or something else?"*
-Good: Present a concrete recommendation, a structured trade-off table, and a safe default that keeps progress moving.
+> **"Don't assume. Don't hide confusion. Surface tradeoffs upfront."** — Andrej Karpathy
 
 ---
 
-## 2. When to Ask vs. When to Decide Autonomously
+## 1. The Core Laws of Questioning
+
+1. **Never ask lazy, open-ended questions.**
+   - *Bad*: "What would you like me to do next?" or "How should we implement this?"
+   - *Good*: Present a concrete recommendation, a structured trade-off table, and a safe default that keeps progress moving.
+
+2. **Surface Hidden Assumptions Before Coding**:
+   - If a prompt has multiple interpretations, **do not pick one silently**. Present them clearly.
+   - If something is unclear or ambiguous, stop, name what is confusing, and present the options.
+
+3. **Push Back When Warranted**:
+   - If the user asks for a complex, speculative architecture (e.g. 5 abstract classes, an event bus, or new microservice) when a simple 10-line function or standard library pattern solves the problem cleanly:
+     - **Politely push back**: *"A simple 10-line function will satisfy this requirement with lower maintenance cost and zero extra dependencies. Would you prefer that over the complex approach?"*
+
+---
+
+## 2. Ambiguity Taxonomy (What to Clarify)
+
+When a request is broad, categorize the ambiguity into one of four dimensions:
+
+| Dimension | Ambiguity Example | Clarification Pattern |
+| :--- | :--- | :--- |
+| **1. Scope** | *"Add user export"* | Export ALL users or filtered subset? Active only? Include sensitive PII? |
+| **2. Delivery Format** | *"Export data"* | Browser file download, API JSON endpoint, or background job with email delivery? |
+| **3. Volume / Scale** | *"Process uploaded files"* | 10 KB JSON files or 500 MB CSV files? (Determines in-memory vs streaming approach). |
+| **4. Performance** | *"Make search faster"* | Faster single-query latency (<100ms), higher concurrent throughput, or faster perceived UX (progressive streaming)? |
+
+---
+
+## 3. When to Ask vs. When to Decide Autonomously
 
 - **Ask the User ONLY for One-Way Doors**:
   - Irreversible data or schema loss.
@@ -22,14 +48,14 @@ Good: Present a concrete recommendation, a structured trade-off table, and a saf
 
 ---
 
-## 3. The 1-Screen Precision Question Schema
+## 4. The 1-Screen Precision Question Schema
 
 When an escalation triggers and user input is mandatory, adhere strictly to this format:
 
 ```markdown
 ### Decision Required: [Clear 1-Line Title]
 
-**Context**: [1-2 sentences explaining why this decision is a one-way door].
+**Context**: [1-2 sentences explaining the ambiguity or why this is a one-way door].
 
 | Option | Correctness Risk | Effort | Reversibility | Maintainability | Recommendation |
 |---|---|---|---|---|---|
